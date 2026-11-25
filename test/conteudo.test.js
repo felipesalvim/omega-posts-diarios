@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
 import { lerPosts, validarPost, validarCalendario } from '../src/conteudo.js';
 
 const base = {
@@ -9,7 +10,7 @@ const base = {
 };
 
 test('lerPosts preserva vírgulas, aspas e quebras de linha na legenda', () => {
-  const posts = lerPosts(new URL('./fixtures/conteudo', import.meta.url).pathname);
+  const posts = lerPosts(fileURLToPath(new URL('./fixtures/conteudo', import.meta.url)));
   assert.equal(posts.length, 2);
   assert.equal(posts[0].legenda, 'Linha 1, com "aspas"\nLinha 2');
   assert.equal(posts[1].status, 'Rascunho');
