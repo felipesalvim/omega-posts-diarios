@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parse } from 'csv-parse/sync';
-import { HASHTAGS, LIMITES } from './config.js';
+import { LIMITES } from './config.js';
+import { montarLegenda } from './legenda.js';
+import { erroDeImagem } from './slides/imagens.js';
 
 /**
  * @typedef {Object} Post
@@ -13,6 +15,7 @@ import { HASHTAGS, LIMITES } from './config.js';
  * @property {string} slide3_texto
  * @property {string} cta_final
  * @property {string} legenda
+ * @property {string} [imagem]  ilustração da biblioteca, foto em imagens/ ou "nenhuma"; vazio = padrão do pilar
  * @property {string} status  Rascunho | Aprovado | Publicado
  */
 
@@ -56,10 +59,12 @@ export function validarPost(post) {
       erros.push(`${rotulo}: ${campo} tem ${palavras} palavras (máximo ${LIMITES.palavrasSlide}).`);
     }
   }
-  const legendaFinal = `${post.legenda ?? ''}\n\n${post.cta_final ?? ''}\n\n${HASHTAGS}`;
+  const legendaFinal = montarLegenda({ legenda: post.legenda ?? '', cta_final: post.cta_final ?? '' });
   if (legendaFinal.length > LIMITES.legenda) {
     erros.push(`${rotulo}: a legenda final tem ${legendaFinal.length} caracteres (máximo ${LIMITES.legenda}).`);
   }
+  const erroImagem = erroDeImagem(post);
+  if (erroImagem) erros.push(erroImagem);
   return erros;
 }
 

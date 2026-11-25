@@ -2,13 +2,16 @@
 <html lang="pt-BR"><head><meta charset="utf-8"><style>{{estilo}}</style></head>
 <body>
 <main class="slide contracapa {{fundo}}">
-  <div class="andar"><div class="painel"><span>{{indice}}</span>{{seta}}</div><span class="etiqueta">{{etiqueta}}</span></div>
+  <header class="topo"><span class="marca"></span><span class="etiqueta">{{etiqueta}}</span></header>
+  {{progresso}}
   <div class="area-texto"><h2 class="texto" data-max="92" data-min="44">{{texto}}</h2></div>
-  <dl class="contatos">
-    <div class="contato"><dt>WhatsApp</dt><dd>{{whatsapp}}</dd></div>
-    <div class="contato"><dt>Instagram</dt><dd>{{instagram}}</dd></div>
-    <div class="contato"><dt>Site</dt><dd>{{site}}</dd></div>
-  </dl>
+  <div class="contatos">
+    <div class="whats"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.7l1.4 4-1.8 1.4a11 11 0 0 0 5.7 5.7l1.4-1.8 4 1.4v2.7a2 2 0 0 1-2.2 2A15.5 15.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z" fill="currentColor"/></svg><span class="rotulo">WhatsApp</span><span class="numero">{{whatsapp}}</span></div>
+    <dl class="outros">
+      <div class="contato"><dt>Instagram</dt><dd>{{instagram}}</dd></div>
+      <div class="contato"><dt>Site</dt><dd>{{site}}</dd></div>
+    </dl>
+  </div>
   <img class="logo" src="{{assets}}/{{logo}}" alt="Ômega Elevadores">
 </main>
 <script>{{ajuste}}</script>

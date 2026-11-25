@@ -33,9 +33,9 @@ body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'DM Sans', 
   mask-image: linear-gradient(to bottom, transparent 0 150px, #000 196px, #000 250px, transparent 340px, transparent 1150px, #000 1200px);
 }
 /* Aros finos: eco do símbolo da logo, só na capa */
-.aro { position: absolute; border-radius: 50%; border: 2px solid rgba(227,207,166,.26); pointer-events: none; }
+.aro { position: absolute; border-radius: 50%; border: 2px solid rgba(227,207,166,.38); pointer-events: none; }
 .aro.grande { width: 780px; height: 780px; right: -270px; top: -190px; }
-.aro.pequeno { width: 520px; height: 520px; right: -140px; top: -60px; border-width: 1.5px; border-color: rgba(227,207,166,.16); }
+.aro.pequeno { width: 520px; height: 520px; right: -140px; top: -60px; border-width: 1.5px; border-color: rgba(227,207,166,.24); }
 
 /* Fundo claro: portas abertas */
 .claro { background: var(--aco); color: var(--tinta); }
@@ -43,30 +43,66 @@ body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'DM Sans', 
 .n2 .faixa { background: var(--dourado); }
 .n3 .faixa { background: var(--vinho); }
 
-/* Cabeçalho: indicador de andar + nome do slide */
-.andar { position: absolute; left: 72px; top: 64px; display: flex; align-items: center; gap: 24px; }
-.painel {
-  display: flex; align-items: center; gap: 12px; height: 88px; padding: 0 22px;
-  border: 3px solid currentColor; border-radius: 14px;
-  font-family: 'Space Mono', monospace; font-weight: 700; font-size: 50px; line-height: 1;
+/* Cabeçalho: marca dourada + nome do slide; progresso no canto oposto */
+.topo { position: absolute; left: 72px; top: 70px; display: flex; align-items: center; gap: 18px; height: 40px; }
+.marca { width: 18px; height: 18px; border-radius: 50%; border: 4px solid var(--dourado); }
+.escuro .marca { border-color: var(--dourado-claro); }
+.etiqueta { font-weight: 600; font-size: 34px; letter-spacing: -0.01em; }
+.escuro .etiqueta { color: rgba(255,255,255,.94); }
+.claro .etiqueta { color: var(--vinho); }
+
+.progresso { position: absolute; right: 72px; top: 81px; display: flex; gap: 10px; }
+.passo { width: 40px; height: 6px; border-radius: 3px; }
+.escuro .passo { background: rgba(255,255,255,.28); }
+.escuro .passo.atual { background: var(--dourado-claro); }
+.claro .passo { background: rgba(138,21,27,.18); }
+.claro .passo.atual { background: var(--vinho); }
+
+/* Seta "próximo": coluna lateral reservada, o texto nunca passa por baixo dela */
+.proximo {
+  position: absolute; right: 48px; top: 50%; margin-top: -44px; width: 88px; height: 88px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
 }
-.painel svg { width: 24px; height: 24px; }
-.escuro .painel { color: var(--dourado-claro); }
-.claro .painel { color: var(--vinho); }
-.etiqueta { font-weight: 500; font-size: 34px; letter-spacing: -0.01em; }
-.escuro .etiqueta { color: rgba(255,255,255,.92); }
-.claro .etiqueta { color: var(--tinta); }
+.proximo svg { width: 38px; height: 38px; margin-left: 4px; }
+.escuro .proximo { background: rgba(255,255,255,.08); border: 3px solid var(--dourado-claro); color: var(--dourado-claro); }
+.claro .proximo { background: var(--vinho); color: #fff; }
 
 /* Texto principal */
 .area-texto { position: absolute; left: 72px; right: 72px; top: 210px; bottom: 196px; display: flex; flex-direction: column; }
+.com-proximo .area-texto { right: 176px; }
 .texto { margin: 0; }
-.capa .texto { margin-top: auto; font-weight: 700; line-height: 1.04; letter-spacing: -0.03em; text-wrap: balance; }
-.conteudo .texto { margin-block: auto; font-weight: 500; line-height: 1.2; letter-spacing: -0.015em; text-wrap: pretty; }
-.contracapa .area-texto { bottom: 440px; }
+.capa .texto { padding-top: 44px; background: linear-gradient(var(--dourado-claro), var(--dourado-claro)) no-repeat 0 0 / 120px 6px; margin-top: auto; font-weight: 700; line-height: 1.04; letter-spacing: -0.03em; text-wrap: balance; }
+.conteudo .texto { margin-block: auto; font-weight: 400; line-height: 1.2; letter-spacing: -0.015em; text-wrap: pretty; }
+.destaque { display: block; font-weight: 700; color: var(--vinho); letter-spacing: -0.025em; }
+.unico { display: block; font-weight: 500; color: var(--tinta); }
+.resto { display: block; margin-top: .55em; font-size: .78em; line-height: 1.3; color: rgba(42,18,20,.86); }
+.claro .aro.fantasma { width: 700px; height: 700px; left: -300px; bottom: -260px; border-color: rgba(138,21,27,.08); }
+.contracapa .area-texto { bottom: 470px; }
 .contracapa .texto { margin-top: auto; font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; text-wrap: balance; }
 
-/* Contatos da contra-capa */
+/* Com imagem, os aros e a fresta saem de cena para não competir com a ilustração */
+.com-imagem .aro, .com-imagem .fresta { display: none; }
+
+/* Imagem da capa: ocupa o espaço entre o cabeçalho e o título */
+.zona-imagem { flex: 1 1 0; min-height: 0; margin-bottom: 28px; display: flex; }
+.ilustracao { height: 100%; max-height: 400px; aspect-ratio: 1; width: auto; flex: none; align-self: center; }
+.ilustracao .anel { fill: none; stroke: rgba(227,207,166,.32); stroke-width: 3; }
+.ilustracao .t { fill: none; stroke: var(--dourado-claro); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.ilustracao .f { fill: var(--vinho-fundo); stroke: var(--dourado-claro); stroke-width: 9; stroke-linejoin: round; stroke-linecap: round; }
+.ilustracao .d { fill: var(--dourado-claro); }
+.ilustracao .fino { stroke-width: 5; }
+.foto { width: 100%; height: 100%; object-fit: cover; border-radius: 28px; border: 3px solid var(--dourado-claro); }
+
+/* Contatos da contra-capa: WhatsApp em destaque, o resto em linhas */
 .contatos { position: absolute; left: 72px; bottom: 96px; width: 700px; }
+.whats {
+  display: flex; align-items: center; gap: 20px; height: 112px; padding: 0 40px; margin-bottom: 28px; width: fit-content;
+  border-radius: 56px; background: var(--dourado-claro); color: var(--vinho-fundo);
+}
+.whats svg { width: 44px; height: 44px; flex: none; }
+.whats .rotulo { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 26px; }
+.whats .numero { font-weight: 700; font-size: 48px; letter-spacing: -0.01em; }
+.outros { margin: 0; }
 .contato { display: grid; grid-template-columns: 176px 1fr; align-items: baseline; padding: 20px 0; border-top: 1.5px solid rgba(169,130,75,.75); }
 .contato:last-child { border-bottom: 1.5px solid rgba(169,130,75,.75); }
 .contato dt { font-family: 'Space Mono', monospace; font-size: 26px; color: var(--dourado-claro); }

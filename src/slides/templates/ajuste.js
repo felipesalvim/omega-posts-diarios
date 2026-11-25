@@ -4,8 +4,9 @@
   const texto = area.querySelector('.texto');
   let tamanho = parseFloat(texto.dataset.max);
   const minimo = parseFloat(texto.dataset.min);
+  const limite = area.clientHeight - (parseFloat(texto.dataset.reserva) || 0);
   texto.style.fontSize = tamanho + 'px';
-  while (tamanho > minimo && texto.offsetHeight > area.clientHeight) {
+  while (tamanho > minimo && texto.offsetHeight > limite) {
     tamanho -= 2;
     texto.style.fontSize = tamanho + 'px';
   }

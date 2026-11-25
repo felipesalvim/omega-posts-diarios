@@ -88,3 +88,47 @@ test('texto longo não estoura a área nem passa por trás da logo', async () =>
     await navegador.close();
   }
 });
+
+test('slides 1 a 3 têm seta de próximo; o 4 não; nenhum mostra o número do slide', () => {
+  const htmls = montarSlides(post).map((s) => htmlDoSlide(s));
+  htmls.forEach((html, i) => {
+    assert.equal(/class="proximo"/.test(html), i < 3, `seta no slide ${i + 1}`);
+    assert.doesNotMatch(html, /class="painel"/, `slide ${i + 1} ainda mostra o número`);
+    assert.equal((html.match(/class="passo/g) || []).length, 4, `slide ${i + 1} sem 4 passos de progresso`);
+    assert.equal((html.match(/passo atual/g) || []).length, 1, `slide ${i + 1} sem passo atual`);
+  });
+});
+
+test('slides de conteúdo destacam a primeira frase', () => {
+  const html = htmlDoSlide(montarSlides({ ...post, slide2_texto: 'Falso. Um toque basta.' })[1]);
+  assert.match(html, /<strong class="destaque">Falso\.<\/strong>/);
+  assert.match(html, /<span class="resto">Um toque basta\.<\/span>/);
+});
+
+test('texto longo não passa por baixo da seta', async () => {
+  const saida = fs.mkdtempSync(path.join(os.tmpdir(), 'slides-'));
+  await renderizarSlides({ ...post, titulo_capa: palavras(14), slide2_texto: palavras(40), slide3_texto: palavras(40) }, saida);
+  const navegador = await abrirNavegador();
+  try {
+    const page = await navegador.newPage({ viewport: { width: 1080, height: 1350 } });
+    for (const n of [1, 2, 3]) {
+      await page.goto(pathToFileURL(path.join(PASTA_HTML, `slide-${n}.html`)).href);
+      await page.waitForSelector('body[data-pronto]');
+      const m = await page.evaluate(() => ({
+        textoRight: document.querySelector('.texto').getBoundingClientRect().right,
+        setaLeft: document.querySelector('.proximo').getBoundingClientRect().left,
+      }));
+      assert.ok(m.textoRight <= m.setaLeft - 16, `slide ${n}: texto (${m.textoRight}) encosta na seta (${m.setaLeft})`);
+    }
+  } finally {
+    await navegador.close();
+  }
+});
+
+test('texto de uma frase só: curto fica em destaque, longo fica em peso normal', () => {
+  const curto = htmlDoSlide(montarSlides({ ...post, slide2_texto: 'Um toque basta.' })[1]);
+  assert.match(curto, /<strong class="destaque">Um toque basta\.<\/strong>/);
+  const longo = htmlDoSlide(montarSlides({ ...post, slide2_texto: 'Por isso a manutenção periódica importa: ela mantém cabos, freios e limitadores em condição de trabalhar quando necessário.' })[1]);
+  assert.match(longo, /<span class="unico">Por isso/);
+  assert.doesNotMatch(longo, /<strong class="destaque">Por isso/);
+});

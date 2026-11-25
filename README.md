@@ -58,3 +58,18 @@ npm test                                  # confere tudo
 node src/cli/preparar.js 2026-12-01       # gera as imagens em site/2026-12-01
 node src/cli/estoque.js                   # quantos dias aprovados à frente
 ```
+
+## Imagem da capa
+
+Cada capa leva uma imagem acima do título. Quem decide é a coluna `imagem` do CSV do mês:
+
+- **vazia**: o robô usa a ilustração padrão do pilar;
+- **nome de uma ilustração** (`botao`, `cabos`, `motor`, `checklist`, `alerta`, `upgrade`, `espelho`, `escudo`, `porta`, `chave`, `cabine`, `pessoas`, `lupa`, `carga`, `vf`, `telefone`, `calendario`, `acessivel`, `engrenagem`, `grade`, `presente`, `pata`, `estrela`, `check`, `predio`);
+- **nome de uma foto** que esteja na pasta `imagens/` (por exemplo `visita-tecnica.jpg`);
+- **`nenhuma`**: capa só com o título.
+
+Para dezembro de 2026, `node src/cli/atribuir-imagens.js conteudo/2026-12.csv` preenche a coluna sem mexer em mais nada (nem nos status). As ilustrações ficam em `src/slides/ilustracoes.js`.
+
+## Legenda
+
+Toda legenda termina com o bloco de contatos (nome, cidade, site e WhatsApp), definido em `src/config.js`, antes das hashtags fixas.

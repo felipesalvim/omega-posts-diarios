@@ -1,16 +1,18 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { PAGES_BASE_URL } from './config.js';
 import { lerPosts, validarPost } from './conteudo.js';
 import { postDoDia } from './agenda.js';
 import { montarLegenda } from './legenda.js';
 import { lerRegistro, jaPublicado, registrar } from './registro.js';
+import { resolverImagem } from './slides/imagens.js';
 import { renderizarSlides } from './slides/renderizar.js';
 import { publicarCarrossel } from './instagram.js';
 
 /**
  * Valida o post do dia e gera os 4 JPEGs em `pastaSite/<data>/`.
  * @returns {Promise<null | {data:string, post:object, legenda:string, arquivos:string[], urls:string[]}>}
- *   null quando o dia já foi publicado.
+ *   null quando o dia já foi publicado ou o calendário ainda não começou.
  */
 export async function prepararDia({ hoje, pastaConteudo, pastaSite, caminhoRegistro }) {
   if (jaPublicado(lerRegistro(caminhoRegistro), hoje)) return null;
@@ -25,6 +27,11 @@ export async function prepararDia({ hoje, pastaConteudo, pastaSite, caminhoRegis
   if (post.status !== 'Aprovado') throw new Error(`O post de ${hoje} está com status "${post.status}"; precisa estar Aprovado.`);
   const erros = validarPost(post);
   if (erros.length) throw new Error(erros.join('\n'));
+
+  const imagem = resolverImagem(post);
+  if (imagem?.tipo === 'foto' && !fs.existsSync(path.join(pastaConteudo, '..', 'imagens', imagem.arquivo))) {
+    throw new Error(`A foto imagens/${imagem.arquivo} do post de ${hoje} não está no repositório.`);
+  }
 
   const arquivos = await renderizarSlides(post, path.join(pastaSite, hoje));
   const urls = arquivos.map((a) => `${PAGES_BASE_URL}/${hoje}/${path.basename(a)}`);
