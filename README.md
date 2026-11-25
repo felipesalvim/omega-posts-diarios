@@ -42,7 +42,7 @@ Copie `conteudo/2026-12.csv` como modelo. Colunas: `data, pilar, objetivo, titul
 7. **Teste real (opcional):** rode de novo com simular **desmarcado** para uma data aprovada. Vai publicar de verdade.
 8. **Primeiro post automático:** 01/12/2026, 18h. Antes disso, troque os posts de dezembro para **Aprovado**.
 
-> A versão da API do Instagram fica em `src/config.js` (`INSTAGRAM.versao`). Na ativação, confira se ainda é a versão atual da Meta e atualize se preciso.
+> A versão da API do Instagram fica em `src/config.js` (`INSTAGRAM.versao`). Atualizada em 24/11/2026 para a v26.0, a que a documentação da Meta usa nos exemplos. Se um dia a API recusar, confira a versão atual.
 
 ## Manutenção
 
