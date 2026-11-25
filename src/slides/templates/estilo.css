@@ -1,0 +1,76 @@
+@font-face { font-family: 'DM Sans'; font-weight: 400; src: url('{{assets}}/fonts/dm-sans-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'DM Sans'; font-weight: 500; src: url('{{assets}}/fonts/dm-sans-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'DM Sans'; font-weight: 600; src: url('{{assets}}/fonts/dm-sans-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'DM Sans'; font-weight: 700; src: url('{{assets}}/fonts/dm-sans-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Space Mono'; font-weight: 400; src: url('{{assets}}/fonts/space-mono-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Space Mono'; font-weight: 700; src: url('{{assets}}/fonts/space-mono-latin-700-normal.woff2') format('woff2'); }
+
+:root {
+  --vinho: #8A151B;
+  --vinho-fundo: #5C0C11;
+  --dourado: #A9824B;
+  --dourado-claro: #E3CFA6;
+  --aco: #ECEEEF;
+  --tinta: #2A1214;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'DM Sans', sans-serif; }
+
+.slide { position: relative; width: 1080px; height: 1080px; overflow: hidden; }
+
+/* Fundo escuro: portas de elevador fechadas (aço escovado em vinho + fresta central) */
+.escuro { background: var(--vinho); color: #fff; }
+.escuro::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 2px, rgba(0,0,0,.022) 2px 6px);
+}
+.fresta {
+  position: absolute; left: 50%; top: 0; bottom: 0; width: 10px; margin-left: -5px;
+  background: linear-gradient(90deg, var(--dourado) 0 1.5px, var(--vinho-fundo) 1.5px calc(100% - 1.5px), var(--dourado) calc(100% - 1.5px));
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0 150px, #000 196px, #000 250px, transparent 340px, transparent 900px, #000 950px);
+  mask-image: linear-gradient(to bottom, transparent 0 150px, #000 196px, #000 250px, transparent 340px, transparent 900px, #000 950px);
+}
+/* Aros finos: eco do símbolo da logo, só na capa */
+.aro { position: absolute; border-radius: 50%; border: 2px solid rgba(227,207,166,.26); pointer-events: none; }
+.aro.grande { width: 780px; height: 780px; right: -270px; top: -190px; }
+.aro.pequeno { width: 520px; height: 520px; right: -140px; top: -60px; border-width: 1.5px; border-color: rgba(227,207,166,.16); }
+
+/* Fundo claro: portas abertas */
+.claro { background: var(--aco); color: var(--tinta); }
+.faixa { position: absolute; left: 0; top: 0; bottom: 0; width: 18px; }
+.n2 .faixa { background: var(--dourado); }
+.n3 .faixa { background: var(--vinho); }
+
+/* Cabeçalho: indicador de andar + nome do slide */
+.andar { position: absolute; left: 72px; top: 64px; display: flex; align-items: center; gap: 24px; }
+.painel {
+  display: flex; align-items: center; gap: 12px; height: 88px; padding: 0 22px;
+  border: 3px solid currentColor; border-radius: 14px;
+  font-family: 'Space Mono', monospace; font-weight: 700; font-size: 50px; line-height: 1;
+}
+.painel svg { width: 24px; height: 24px; }
+.escuro .painel { color: var(--dourado-claro); }
+.claro .painel { color: var(--vinho); }
+.etiqueta { font-weight: 500; font-size: 34px; letter-spacing: -0.01em; }
+.escuro .etiqueta { color: rgba(255,255,255,.92); }
+.claro .etiqueta { color: var(--tinta); }
+
+/* Texto principal */
+.area-texto { position: absolute; left: 72px; right: 72px; top: 210px; bottom: 196px; display: flex; flex-direction: column; }
+.texto { margin: 0; }
+.capa .texto { margin-top: auto; font-weight: 700; line-height: 1.04; letter-spacing: -0.03em; text-wrap: balance; }
+.conteudo .texto { margin-block: auto; font-weight: 500; line-height: 1.2; letter-spacing: -0.015em; text-wrap: pretty; }
+.contracapa .area-texto { bottom: 440px; }
+.contracapa .texto { margin-top: auto; font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; text-wrap: balance; }
+
+/* Contatos da contra-capa */
+.contatos { position: absolute; left: 72px; bottom: 96px; width: 700px; }
+.contato { display: grid; grid-template-columns: 176px 1fr; align-items: baseline; padding: 20px 0; border-top: 1.5px solid rgba(169,130,75,.75); }
+.contato:last-child { border-bottom: 1.5px solid rgba(169,130,75,.75); }
+.contato dt { font-family: 'Space Mono', monospace; font-size: 26px; color: var(--dourado-claro); }
+.contato dd { margin: 0; font-weight: 600; font-size: 40px; letter-spacing: -0.01em; }
+
+/* Logo: sempre no canto inferior direito */
+.logo { position: absolute; right: 48px; bottom: 48px; width: 220px; height: auto; }
