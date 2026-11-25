@@ -15,8 +15,13 @@ import { publicarCarrossel } from './instagram.js';
 export async function prepararDia({ hoje, pastaConteudo, pastaSite, caminhoRegistro }) {
   if (jaPublicado(lerRegistro(caminhoRegistro), hoje)) return null;
 
-  const post = postDoDia(lerPosts(pastaConteudo), hoje);
-  if (!post) throw new Error(`Não existe post para ${hoje} nos arquivos de conteúdo.`);
+  const posts = lerPosts(pastaConteudo);
+  const post = postDoDia(posts, hoje);
+  if (!post) {
+    const primeiroDia = posts.map((p) => p.data).sort()[0];
+    if (primeiroDia && hoje < primeiroDia) return null; // o calendário ainda não começou
+    throw new Error(`Não existe post para ${hoje} nos arquivos de conteúdo.`);
+  }
   if (post.status !== 'Aprovado') throw new Error(`O post de ${hoje} está com status "${post.status}"; precisa estar Aprovado.`);
   const erros = validarPost(post);
   if (erros.length) throw new Error(erros.join('\n'));
