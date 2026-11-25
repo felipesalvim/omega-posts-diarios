@@ -22,4 +22,4 @@ export const PAGES_BASE_URL = 'https://felipesalvim.github.io/omega-posts-diario
 
 export const SLIDE_PX = 1080;
 
-export const INSTAGRAM = { host: 'https://graph.instagram.com', versao: 'v26.0' };
+export const INSTAGRAM = { host: 'https://graph.facebook.com', versao: 'v26.0' };

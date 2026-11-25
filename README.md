@@ -33,12 +33,11 @@ Copie `conteudo/2026-12.csv` como modelo. Colunas: `data, pilar, objetivo, titul
 1. **Repositório:** crie `felipesalvim/omega-posts-diarios` como **público** e envie este projeto (`git push`).
 2. **GitHub Pages:** Settings > Pages > Source: **GitHub Actions**.
 3. **Conta do Instagram:** precisa ser profissional (Comercial ou Criador) e estar ligada à Página do Facebook (você já confirmou que está).
-4. **App na Meta:** em developers.facebook.com, crie um app do tipo Empresa, adicione o produto **Instagram** com *Instagram API with Instagram Login*, inclua a conta @omegaelevadores e peça as permissões `instagram_business_basic` e `instagram_business_content_publish`. Gere um **token de longa duração** e anote o **ID da conta** (ID do usuário do Instagram).
+4. **App na Meta:** em developers.facebook.com, crie um app com o caso de uso *Gerenciar mensagens e conteúdo no Instagram*. Apps novos usam o **login unificado**: crie a configuração, ligue a conta @omegaelevadores e gere um **token de usuário do sistema** (não expira) em business.facebook.com > Configurações da empresa > Usuários do sistema, com as permissões `instagram_basic` e `instagram_content_publish`. Anote o **ID da conta do Instagram**.
 5. **Segredos** (Settings > Secrets and variables > Actions):
    - `IG_USER_ID`: ID da conta do Instagram
-   - `IG_ACCESS_TOKEN`: token de longa duração
-   - `SEGREDOS_PAT`: token pessoal do GitHub (fine-grained, só neste repositório, permissão *Secrets: Read and write*), usado para renovar o token do Instagram sozinho
-6. **Teste simulado:** Actions > *Postar carrossel do dia* > Run workflow, data `2026-12-01`, simular **marcado**. Ele gera as imagens (baixe em *imagens-simulacao*), confere a legenda e checa que o token enxerga @omegaelevadores, sem publicar nada.
+   - `IG_ACCESS_TOKEN`: token do usuário do sistema
+6. **Teste simulado:** Actions > *Postar carrossel do dia* > Run workflow, data `2026-12-01`, simular **marcado**. Ele gera as imagens (baixe em *imagens-simulacao*), confere a legenda e checa que o token enxerga a conta, sem publicar nada.
 7. **Teste real (opcional):** rode de novo com simular **desmarcado** para uma data aprovada. Vai publicar de verdade.
 8. **Primeiro post automático:** 01/12/2026, 18h. Antes disso, troque os posts de dezembro para **Aprovado**.
 
@@ -46,7 +45,7 @@ Copie `conteudo/2026-12.csv` como modelo. Colunas: `data, pilar, objetivo, titul
 
 ## Manutenção
 
-- **Token:** vale 60 dias. `renovar-token.yml` renova no dia 1 de cada mês e guarda o novo valor sozinho.
+- **Token:** o token de usuário do sistema não expira. Se um dia for revogado, gere outro e troque o segredo `IG_ACCESS_TOKEN`.
 - **Agendador:** o GitHub pausa agendamentos de repositórios sem atividade por 60 dias. O commit diário do registro deve evitar isso, mas confira a aba Actions de vez em quando.
 - **Falhou?** Veja o log em Actions. Causas comuns: post do dia ainda Rascunho, token expirado, ou colchetes sobrando no texto.
 - **Rodar um dia atrasado:** Run workflow com a data desejada (simular desmarcado).

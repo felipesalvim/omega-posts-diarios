@@ -13,7 +13,7 @@ if (simular) {
   console.log(contexto.legenda);
   if (igUserId && token) {
     const conta = await consultarConta({ igUserId, token });
-    console.log(`Token enxerga a conta @${conta.username} (${conta.account_type}).`);
+    console.log(`Token enxerga a conta @${conta.username}.`);
   }
   process.exit(0);
 }

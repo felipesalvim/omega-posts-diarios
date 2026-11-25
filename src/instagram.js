@@ -51,12 +51,6 @@ export async function publicarCarrossel({ igUserId, token, urls, legenda, fetchI
 
 /** Confere que o token enxerga a conta certa. */
 export async function consultarConta({ igUserId, token, fetchImpl = fetch }) {
-  return chamar(fetchImpl, `${base()}/${igUserId}?fields=username,account_type`, { token });
+  return chamar(fetchImpl, `${base()}/${igUserId}?fields=username`, { token });
 }
 
-/** Renova o token de longa duração; devolve apenas o novo token. */
-export async function renovarToken({ token, fetchImpl = fetch }) {
-  const url = `${INSTAGRAM.host}/refresh_access_token?grant_type=ig_refresh_token&access_token=${encodeURIComponent(token)}`;
-  const { access_token: novo } = await chamar(fetchImpl, url);
-  return novo;
-}

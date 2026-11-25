@@ -20,5 +20,5 @@ test('config guarda endereço do Pages, estoque mínimo e limites', () => {
   assert.equal(LIMITES.legenda, 2200);
   assert.equal(SLIDE_PX, 1080);
   assert.equal(FUSO, 'America/Fortaleza');
-  assert.equal(INSTAGRAM.host, 'https://graph.instagram.com');
+  assert.equal(INSTAGRAM.host, 'https://graph.facebook.com');
 });
