@@ -49,13 +49,13 @@ test('htmlDoSlide escapa HTML do texto', () => {
   assert.ok(html.includes('&lt;b&gt;x&lt;/b&gt; &amp; y'));
 });
 
-test('renderizarSlides gera 4 JPEGs 1080x1080', async () => {
+test('renderizarSlides gera 4 JPEGs 1080x1350', async () => {
   const saida = fs.mkdtempSync(path.join(os.tmpdir(), 'slides-'));
   const arquivos = await renderizarSlides(post, saida);
   assert.deepEqual(arquivos.map((f) => path.basename(f)), ['slide-1.jpg', 'slide-2.jpg', 'slide-3.jpg', 'slide-4.jpg']);
   for (const f of arquivos) {
     const { width, height, type } = imageSize(fs.readFileSync(f));
-    assert.deepEqual([width, height, type], [1080, 1080, 'jpg']);
+    assert.deepEqual([width, height, type], [1080, 1350, 'jpg']);
   }
 });
 
@@ -67,7 +67,7 @@ test('texto longo não estoura a área nem passa por trás da logo', async () =>
   }, saida);
   const navegador = await abrirNavegador();
   try {
-    const page = await navegador.newPage({ viewport: { width: 1080, height: 1080 } });
+    const page = await navegador.newPage({ viewport: { width: 1080, height: 1350 } });
     for (const n of [1, 2, 3, 4]) {
       await page.goto(pathToFileURL(path.join(PASTA_HTML, `slide-${n}.html`)).href);
       await page.waitForSelector('body[data-pronto]');

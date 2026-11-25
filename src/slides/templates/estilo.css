@@ -16,9 +16,9 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'DM Sans', sans-serif; }
+body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'DM Sans', sans-serif; }
 
-.slide { position: relative; width: 1080px; height: 1080px; overflow: hidden; }
+.slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; }
 
 /* Fundo escuro: portas de elevador fechadas (aço escovado em vinho + fresta central) */
 .escuro { background: var(--vinho); color: #fff; }
@@ -29,8 +29,8 @@ body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'DM Sans', 
 .fresta {
   position: absolute; left: 50%; top: 0; bottom: 0; width: 10px; margin-left: -5px;
   background: linear-gradient(90deg, var(--dourado) 0 1.5px, var(--vinho-fundo) 1.5px calc(100% - 1.5px), var(--dourado) calc(100% - 1.5px));
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0 150px, #000 196px, #000 250px, transparent 340px, transparent 900px, #000 950px);
-  mask-image: linear-gradient(to bottom, transparent 0 150px, #000 196px, #000 250px, transparent 340px, transparent 900px, #000 950px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0 150px, #000 196px, #000 250px, transparent 340px, transparent 1150px, #000 1200px);
+  mask-image: linear-gradient(to bottom, transparent 0 150px, #000 196px, #000 250px, transparent 340px, transparent 1150px, #000 1200px);
 }
 /* Aros finos: eco do símbolo da logo, só na capa */
 .aro { position: absolute; border-radius: 50%; border: 2px solid rgba(227,207,166,.26); pointer-events: none; }
@@ -73,4 +73,4 @@ body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'DM Sans', 
 .contato dd { margin: 0; font-weight: 600; font-size: 40px; letter-spacing: -0.01em; }
 
 /* Logo: sempre no canto inferior direito */
-.logo { position: absolute; right: 48px; bottom: 48px; width: 220px; height: auto; }
+.logo { position: absolute; right: 64px; bottom: 64px; width: 220px; height: auto; }

@@ -1,6 +1,6 @@
 # Posts diários da Ômega Elevadores
 
-Todo dia, às **18h (Fortaleza)**, um carrossel de 4 slides quadrados (1080×1080) é gerado e publicado no Instagram **@omegaelevadores**, sem ninguém precisar apertar nada. Roda 100% no GitHub, sem custo.
+Todo dia, às **18h (Fortaleza)**, um carrossel de 4 slides em formato 4:5 (1080×1350), que não perde texto na grade do perfil é gerado e publicado no Instagram **@omegaelevadores**, sem ninguém precisar apertar nada. Roda 100% no GitHub, sem custo.
 
 | Slide | Conteúdo |
 |---|---|

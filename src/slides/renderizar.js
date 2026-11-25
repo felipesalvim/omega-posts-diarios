@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
-import { SLIDE_PX } from '../config.js';
+import { SLIDE_PX, SLIDE_ALTURA_PX } from '../config.js';
 import { montarSlides, htmlDoSlide } from './montar.js';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -17,13 +17,13 @@ export function abrirNavegador() {
   });
 }
 
-/** Grava slide-1.jpg … slide-4.jpg (1080×1080) em `pastaSaida` e devolve os caminhos. */
+/** Grava slide-1.jpg … slide-4.jpg (1080×1350) em `pastaSaida` e devolve os caminhos. */
 export async function renderizarSlides(post, pastaSaida) {
   fs.mkdirSync(PASTA_HTML, { recursive: true });
   fs.mkdirSync(pastaSaida, { recursive: true });
   const navegador = await abrirNavegador();
   try {
-    const page = await navegador.newPage({ viewport: { width: SLIDE_PX, height: SLIDE_PX } });
+    const page = await navegador.newPage({ viewport: { width: SLIDE_PX, height: SLIDE_ALTURA_PX } });
     const arquivos = [];
     for (const slide of montarSlides(post)) {
       const html = path.join(PASTA_HTML, `slide-${slide.indice}.html`);

@@ -21,5 +21,6 @@ export const ESTOQUE_MINIMO_DIAS = 7;
 export const PAGES_BASE_URL = 'https://felipesalvim.github.io/omega-posts-diarios';
 
 export const SLIDE_PX = 1080;
+export const SLIDE_ALTURA_PX = 1350; // 4:5: a grade do perfil corta só ~34 px de cada lado
 
 export const INSTAGRAM = { host: 'https://graph.facebook.com', versao: 'v26.0' };
