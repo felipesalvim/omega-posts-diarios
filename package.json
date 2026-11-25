@@ -1,0 +1,25 @@
+{
+  "name": "omega-posts-diarios",
+  "version": "1.0.0",
+  "description": "Posts diários em carrossel para o Instagram da Ômega Elevadores",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "csv-parse": "^7.0.3",
+    "playwright": "^1.65.1"
+  },
+  "devDependencies": {
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/space-mono": "^5.3.0",
+    "image-size": "^2.1.0"
+  }
+}
