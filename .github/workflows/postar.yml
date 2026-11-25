@@ -23,13 +23,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  postar:
+  # 1) Valida o post do dia e gera os 4 JPEGs (e, em simulação, confere a conta do Instagram).
+  preparar:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.pages.outputs.page_url }}
-    env:
-      SIMULAR: ${{ github.event_name == 'workflow_dispatch' && inputs.simular || 'false' }}
+    outputs:
+      pular: ${{ steps.preparar.outputs.pular }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,35 +41,70 @@ jobs:
         id: preparar
         run: node src/cli/preparar.js ${{ github.event_name == 'workflow_dispatch' && inputs.data || '' }}
 
-      - name: Publicar imagens no GitHub Pages
-        if: steps.preparar.outputs.pular == 'false' && env.SIMULAR != 'true'
+      - name: Simulação (não publica nada)
+        if: steps.preparar.outputs.pular == 'false' && github.event_name == 'workflow_dispatch' && inputs.simular
+        env:
+          SIMULAR: 'true'
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: node src/cli/publicar.js
+      - name: Guardar imagens da simulação
+        if: steps.preparar.outputs.pular == 'false' && github.event_name == 'workflow_dispatch' && inputs.simular
+        uses: actions/upload-artifact@v4
+        with:
+          name: imagens-simulacao
+          path: site
+
+      - name: Empacotar imagens para o GitHub Pages
+        if: steps.preparar.outputs.pular == 'false' && (github.event_name != 'workflow_dispatch' || !inputs.simular)
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
-      - name: Deploy do Pages
-        id: pages
-        if: steps.preparar.outputs.pular == 'false' && env.SIMULAR != 'true'
+      - name: Guardar o contexto do dia
+        if: steps.preparar.outputs.pular == 'false' && (github.event_name != 'workflow_dispatch' || !inputs.simular)
+        uses: actions/upload-artifact@v4
+        with:
+          name: contexto
+          path: tmp/contexto.json
+
+  # 2) Coloca as imagens no ar (o Instagram baixa por um link público).
+  deploy:
+    needs: preparar
+    if: needs.preparar.outputs.pular == 'false' && (github.event_name != 'workflow_dispatch' || !inputs.simular)
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - id: pages
         uses: actions/deploy-pages@v4
 
+  # 3) Publica o carrossel no Instagram e registra o dia.
+  publicar:
+    needs: [preparar, deploy]
+    if: needs.preparar.outputs.pular == 'false' && (github.event_name != 'workflow_dispatch' || !inputs.simular)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: contexto
+          path: tmp
+
       - name: Publicar no Instagram
-        if: steps.preparar.outputs.pular == 'false'
         env:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: node src/cli/publicar.js
 
       - name: Guardar registro
-        if: steps.preparar.outputs.pular == 'false' && env.SIMULAR != 'true'
         run: |
           git config user.name "omega-bot"
           git config user.email "omega-bot@users.noreply.github.com"
           git add registro/publicados.json
           git commit -m "registro: publicado em $(date -u +%F)" || exit 0
           git push
-
-      - name: Guardar imagens da simulação
-        if: steps.preparar.outputs.pular == 'false' && env.SIMULAR == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: imagens-simulacao
-          path: site
