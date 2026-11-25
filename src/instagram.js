@@ -30,14 +30,25 @@ async function aguardarPronto(fetchImpl, esperar, token, id, tentativas = 30) {
   throw new Error(`Mídia ${id} não ficou pronta a tempo`);
 }
 
-/** Publica um carrossel (2 a 10 imagens JPEG com URL pública) e devolve o id da mídia publicada. */
-export async function publicarCarrossel({ igUserId, token, urls, legenda, fetchImpl = fetch, esperar = dormir }) {
+/** Publica um carrossel (2 a 10 imagens JPEG com URL pública, com um texto alternativo por imagem se `alts` vier) e devolve o id da mídia publicada. */
+export async function publicarCarrossel({ igUserId, token, urls, alts = [], legenda, fetchImpl = fetch, esperar = dormir }) {
   if (urls.length < 2 || urls.length > 10) throw new Error(`Carrossel precisa de 2 a 10 imagens, recebi ${urls.length}`);
   const post = (corpo) => chamar(fetchImpl, `${base()}/${igUserId}/media`, { metodo: 'POST', token, corpo });
 
   const filhos = [];
-  for (const url of urls) {
-    const { id } = await post({ image_url: url, is_carousel_item: true });
+  let usarAlt = alts.length > 0;
+  for (const [i, url] of urls.entries()) {
+    const item = { image_url: url, is_carousel_item: true };
+    let id;
+    if (usarAlt && alts[i]) {
+      try {
+        ({ id } = await post({ ...item, alt_text: alts[i] }));
+      } catch {
+        // A API pode recusar alt_text em alguns contextos: o post sai do mesmo jeito, sem ele.
+        usarAlt = false;
+      }
+    }
+    if (!id) ({ id } = await post(item));
     await aguardarPronto(fetchImpl, esperar, token, id);
     filhos.push(id);
   }

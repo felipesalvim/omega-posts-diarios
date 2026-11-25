@@ -70,6 +70,10 @@ Cada capa leva uma imagem acima do título. Quem decide é a coluna `imagem` do 
 
 Para dezembro de 2026, `node src/cli/atribuir-imagens.js conteudo/2026-12.csv` preenche a coluna sem mexer em mais nada (nem nos status). As ilustrações ficam em `src/slides/ilustracoes.js`.
 
-## Legenda
+## Legenda e texto alternativo
 
-Toda legenda termina com o bloco de contatos (nome, cidade, site e WhatsApp), definido em `src/config.js`, antes das hashtags fixas.
+A legenda de cada post é montada nesta ordem: `legenda` (comece com a palavra-chave, por exemplo "elevador" ou "manutenção de elevadores"), `pergunta` (convite para comentar, coluna opcional), `cta_final`, pedido para salvar e enviar ao síndico, bloco de contatos (nome, cidade, site e WhatsApp, em `src/config.js`) e as hashtags fixas.
+
+Cada slide também vai com um texto alternativo (`alt_text`), gerado a partir do conteúdo do post. Se a API do Instagram recusar o campo, o post sai igual, sem ele.
+
+Para dezembro de 2026, `node src/cli/melhorar-legendas.js conteudo/2026-12.csv` acrescenta a coluna `pergunta` e troca as legendas pelas versões novas, mas só nas que ainda são o rascunho original: o que você editou é mantido.

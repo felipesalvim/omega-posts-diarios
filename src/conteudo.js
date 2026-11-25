@@ -59,7 +59,7 @@ export function validarPost(post) {
       erros.push(`${rotulo}: ${campo} tem ${palavras} palavras (máximo ${LIMITES.palavrasSlide}).`);
     }
   }
-  const legendaFinal = montarLegenda({ legenda: post.legenda ?? '', cta_final: post.cta_final ?? '' });
+  const legendaFinal = montarLegenda({ legenda: post.legenda ?? '', pergunta: post.pergunta, cta_final: post.cta_final ?? '' });
   if (legendaFinal.length > LIMITES.legenda) {
     erros.push(`${rotulo}: a legenda final tem ${legendaFinal.length} caracteres (máximo ${LIMITES.legenda}).`);
   }

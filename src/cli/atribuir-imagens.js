@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { parse } from 'csv-parse/sync';
+import { editarCsv } from '../csv-editor.js';
 
 /** Ilustração escolhida para cada capa de dezembro de 2026. */
 export const IMAGENS_DEZEMBRO = {
@@ -14,26 +14,17 @@ export const IMAGENS_DEZEMBRO = {
   '2026-12-29': 'lupa', '2026-12-30': 'estrela', '2026-12-31': 'check',
 };
 
-const celula = (valor) => (/[",\r\n]/.test(valor) ? `"${valor.replaceAll('"', '""')}"` : valor);
-
 /**
  * Acrescenta a coluna `imagem` (antes de `status`) preenchendo só as células vazias.
  * Todo o resto do CSV, inclusive status e textos já editados, é mantido.
  */
 export function adicionarColunaImagem(texto, mapaPorData) {
-  const bom = texto.startsWith('﻿') ? '﻿' : '';
-  const quebra = texto.includes('\r\n') ? '\r\n' : '\n';
-  const linhas = parse(texto, { columns: true, skip_empty_lines: true, bom: true });
-  const colunas = Object.keys(linhas[0] ?? {});
-  if (!colunas.includes('imagem')) {
-    const posStatus = colunas.indexOf('status');
-    colunas.splice(posStatus === -1 ? colunas.length : posStatus, 0, 'imagem');
-  }
-  const corpo = linhas.map((l) => colunas.map((c) => {
-    if (c === 'imagem') return celula(l.imagem?.trim() ? l.imagem : (mapaPorData[l.data] ?? ''));
-    return celula(l[c] ?? '');
-  }).join(','));
-  return bom + [colunas.join(','), ...corpo].join(quebra) + quebra;
+  return editarCsv(texto, {
+    novasColunas: [{ nome: 'imagem', antesDe: ['status'] }],
+    editar(linha) {
+      if (!linha.imagem.trim()) linha.imagem = mapaPorData[linha.data] ?? '';
+    },
+  });
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

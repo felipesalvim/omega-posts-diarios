@@ -4,6 +4,7 @@ import { PAGES_BASE_URL } from './config.js';
 import { lerPosts, validarPost } from './conteudo.js';
 import { postDoDia } from './agenda.js';
 import { montarLegenda } from './legenda.js';
+import { textosAlternativos } from './alt.js';
 import { lerRegistro, jaPublicado, registrar } from './registro.js';
 import { resolverImagem } from './slides/imagens.js';
 import { renderizarSlides } from './slides/renderizar.js';
@@ -35,13 +36,13 @@ export async function prepararDia({ hoje, pastaConteudo, pastaSite, caminhoRegis
 
   const arquivos = await renderizarSlides(post, path.join(pastaSite, hoje));
   const urls = arquivos.map((a) => `${PAGES_BASE_URL}/${hoje}/${path.basename(a)}`);
-  return { data: hoje, post, legenda: montarLegenda(post), arquivos, urls };
+  return { data: hoje, post, legenda: montarLegenda(post), alts: textosAlternativos(post), arquivos, urls };
 }
 
 /** Publica o carrossel e só então registra o dia. Com `simular`, não faz nada e devolve null. */
 export async function publicarDia({ contexto, igUserId, token, caminhoRegistro, simular = false, fetchImpl, esperar }) {
   if (simular) return null;
-  const mediaId = await publicarCarrossel({ igUserId, token, urls: contexto.urls, legenda: contexto.legenda, fetchImpl, esperar });
+  const mediaId = await publicarCarrossel({ igUserId, token, urls: contexto.urls, alts: contexto.alts, legenda: contexto.legenda, fetchImpl, esperar });
   registrar(caminhoRegistro, contexto.data, mediaId);
   return mediaId;
 }

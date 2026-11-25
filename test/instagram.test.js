@@ -101,3 +101,35 @@ test('aguardarUrls falha citando a URL que não apareceu', async () => {
   const f = fetchFalso(() => resposta({}, false, 404));
   await assert.rejects(() => aguardarUrls(['https://x/a.jpg'], { fetchImpl: f, esperar: semEspera, tentativas: 3 }), /https:\/\/x\/a\.jpg/);
 });
+
+test('com textos alternativos, cada imagem vai com o seu alt_text', async () => {
+  const f = fetchFalso(roteiroFeliz());
+  const alts = ['a1', 'a2', 'a3', 'a4'];
+  await publicarCarrossel({ igUserId: '1', token: 't', urls: URLS, alts, legenda: 'x', fetchImpl: f, esperar: semEspera });
+  const itens = f.chamadas.filter((c) => c.corpo?.is_carousel_item);
+  assert.deepEqual(itens.map((c) => c.corpo.alt_text), alts);
+});
+
+test('sem textos alternativos, nenhum alt_text é enviado', async () => {
+  const f = fetchFalso(roteiroFeliz());
+  await publicarCarrossel({ igUserId: '1', token: 't', urls: URLS, legenda: 'x', fetchImpl: f, esperar: semEspera });
+  assert.ok(f.chamadas.every((c) => !c.corpo || !('alt_text' in c.corpo)));
+});
+
+test('se a API recusar o alt_text, repete o item sem ele e segue sem alt_text nos demais', async () => {
+  let itens = 0;
+  const f = fetchFalso((c) => {
+    if (c.metodo === 'POST' && c.corpo?.alt_text && ++itens === 1) return resposta({ error: { message: 'Invalid parameter alt_text' } }, false, 400);
+    return roteiroFeliz()(c);
+  });
+  const id = await publicarCarrossel({ igUserId: '1', token: 't', urls: URLS, alts: ['a', 'b', 'c', 'd'], legenda: 'x', fetchImpl: f, esperar: semEspera });
+  assert.equal(id, 'MIDIA_FINAL');
+  const envios = f.chamadas.filter((c) => c.corpo?.is_carousel_item);
+  assert.equal(envios.length, 5);
+  assert.equal(envios.filter((c) => 'alt_text' in c.corpo).length, 1);
+});
+
+test('se o item falhar mesmo sem alt_text, o erro aparece', async () => {
+  const f = fetchFalso((c) => (c.metodo === 'POST' ? resposta({ error: { message: 'url inválida' } }, false, 400) : resposta({})));
+  await assert.rejects(() => publicarCarrossel({ igUserId: '1', token: 't', urls: URLS, alts: ['a', 'b', 'c', 'd'], legenda: 'x', fetchImpl: f, esperar: semEspera }), /url inválida/);
+});

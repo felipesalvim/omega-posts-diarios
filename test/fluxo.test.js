@@ -24,6 +24,7 @@ test('prepara o dia: 4 JPEGs 1080x1350 e as URLs públicas', async () => {
   const site = novaPasta();
   const ctx = await prepararDia({ hoje: '2026-12-01', pastaConteudo: FIXTURES, pastaSite: site, caminhoRegistro: path.join(novaPasta(), 'r.json') });
   assert.equal(ctx.urls.length, 4);
+  assert.equal(ctx.alts.length, 4);
   assert.equal(ctx.urls[0], `${PAGES_BASE_URL}/2026-12-01/slide-1.jpg`);
   for (const arq of ctx.arquivos) {
     assert.ok(arq.startsWith(path.join(site, '2026-12-01')));
@@ -85,4 +86,18 @@ test('simular não chama a rede nem grava registro', async () => {
   const id = await publicarDia({ contexto, igUserId: '1', token: 't', caminhoRegistro: reg, simular: true, fetchImpl: f, esperar: async () => {} });
   assert.equal(id, null);
   assert.deepEqual(lerRegistro(reg), {});
+});
+
+test('publicarDia envia os textos alternativos do contexto', async () => {
+  const reg = path.join(novaPasta(), 'r.json');
+  const corpos = [];
+  let n = 0;
+  const f = async (url, o = {}) => {
+    if (o.body) corpos.push(JSON.parse(o.body));
+    if (o.method === 'POST' && url.endsWith('/media_publish')) return resposta({ id: 'FINAL' });
+    if (o.method === 'POST') return resposta({ id: `C${++n}` });
+    return resposta({ status_code: 'FINISHED' });
+  };
+  await publicarDia({ contexto: { ...contexto, alts: ['x1', 'x2'] }, igUserId: '1', token: 't', caminhoRegistro: reg, fetchImpl: f, esperar: async () => {} });
+  assert.deepEqual(corpos.filter((c) => c.is_carousel_item).map((c) => c.alt_text), ['x1', 'x2']);
 });
