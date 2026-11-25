@@ -31,3 +31,12 @@ test('diasDeEstoque atravessa a virada de mês e de ano', () => {
   const posts = [p('2027-01-01'), p('2027-01-02')];
   assert.equal(diasDeEstoque(posts, '2026-12-31'), 2);
 });
+
+test('normalizarData aceita AAAA-MM-DD e DD/MM/AAAA e recusa o resto com aviso claro', async () => {
+  const { normalizarData } = await import('../src/agenda.js');
+  assert.equal(normalizarData('2026-12-02'), '2026-12-02');
+  assert.equal(normalizarData('02/12/2026'), '2026-12-02');
+  assert.equal(normalizarData(' 2/12/2026 '), '2026-12-02');
+  assert.throws(() => normalizarData('2026-13-40'), /AAAA-MM-DD/);
+  assert.throws(() => normalizarData('amanhã'), /AAAA-MM-DD/);
+});

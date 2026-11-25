@@ -24,3 +24,15 @@ export function diasDeEstoque(posts, hoje) {
   for (let d = diaSeguinte(hoje); statusPorData.get(d) === 'Aprovado'; d = diaSeguinte(d)) dias += 1;
   return dias;
 }
+
+/** Aceita AAAA-MM-DD ou DD/MM/AAAA e devolve AAAA-MM-DD; qualquer outra coisa é erro, para não pular o dia em silêncio. */
+export function normalizarData(texto) {
+  const t = String(texto).trim();
+  const br = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(t);
+  const iso = br ? `${br[3]}-${br[2].padStart(2, '0')}-${br[1].padStart(2, '0')}` : t;
+  const d = new Date(`${iso}T00:00:00Z`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso) || Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== iso) {
+    throw new Error(`Data "${texto}" inválida. Use AAAA-MM-DD, por exemplo 2026-12-02.`);
+  }
+  return iso;
+}

@@ -1,16 +1,16 @@
 // Gera as imagens do dia em site/ e grava tmp/contexto.json. Uso: node src/cli/preparar.js [AAAA-MM-DD]
 import fs from 'node:fs';
-import { hojeEmFortaleza } from '../agenda.js';
+import { hojeEmFortaleza, normalizarData } from '../agenda.js';
 import { prepararDia } from '../fluxo.js';
 
-const hoje = process.argv[2] || hojeEmFortaleza();
+const hoje = process.argv[2] ? normalizarData(process.argv[2]) : hojeEmFortaleza();
 const contexto = await prepararDia({
   hoje, pastaConteudo: 'conteudo', pastaSite: 'site', caminhoRegistro: 'registro/publicados.json',
 });
 
 const pular = contexto === null;
 if (pular) {
-  console.log(`${hoje}: já publicado, nada a fazer.`);
+  console.log(`${hoje}: nada a publicar hoje (já publicado ou calendário ainda não começou).`);
 } else {
   fs.mkdirSync('tmp', { recursive: true });
   fs.writeFileSync('tmp/contexto.json', JSON.stringify(contexto, null, 2));
