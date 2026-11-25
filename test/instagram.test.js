@@ -36,7 +36,7 @@ test('publica carrossel: 4 itens, depois o carrossel, depois publica', async () 
   const posts = f.chamadas.filter((c) => c.metodo === 'POST');
   assert.equal(posts.length, 6);
   posts.slice(0, 4).forEach((p, i) => {
-    assert.match(p.url, /^https:\/\/graph\.instagram\.com\/v21\.0\/123\/media$/);
+    assert.match(p.url, /^https:\/\/graph\.instagram\.com\/v26\.0\/123\/media$/);
     assert.equal(p.corpo.image_url, URLS[i]);
     assert.equal(p.corpo.is_carousel_item, true);
     assert.equal(p.auth, 'Bearer TOK');
@@ -85,7 +85,7 @@ test('consultarConta devolve usuário e tipo da conta', async () => {
   const f = fetchFalso(() => resposta({ username: 'omegaelevadores', account_type: 'BUSINESS', id: '123' }));
   const conta = await consultarConta({ igUserId: '123', token: 'TOK', fetchImpl: f });
   assert.equal(conta.username, 'omegaelevadores');
-  assert.match(f.chamadas[0].url, /graph\.instagram\.com\/v21\.0\/123\?fields=/);
+  assert.match(f.chamadas[0].url, /graph\.instagram\.com\/v26\.0\/123\?fields=/);
   assert.equal(f.chamadas[0].auth, 'Bearer TOK');
 });
 
